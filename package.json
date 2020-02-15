@@ -1,0 +1,20 @@
+{
+  "name": "acts2-server",
+  "version": "1.0.0",
+  "description": "server for acts2 app",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node built/server.js"
+  },
+  "author": "Nicholas Fafel",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^13.7.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "http": "0.0.0",
+    "mongoose": "^5.9.1"
+  }
+}
