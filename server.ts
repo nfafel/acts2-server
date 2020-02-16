@@ -5,8 +5,8 @@ const http = require('http');
 const app = express();
 
 const user = require('./routes/user'); // Imports routes for the cars
+const university = require('./routes/university'); // Imports routes for the cars
 
-const University = require('./models/university');
 const {postUnivData} = require('./initializeUnivData/postUnivData');
 
 //Set up mongoose connection
@@ -33,6 +33,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cors());
 
 app.use('/user', user);
+app.use('/university', university);
 
 app.get('/version', (req, res) => {
     res.send( {version: `Current version of Node: ${process.version}`} );

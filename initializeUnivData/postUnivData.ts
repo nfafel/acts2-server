@@ -1,5 +1,7 @@
 export const postUnivData = async(req, res) => {
+    const University = require('./models/university');
     const fs = require('fs') 
+    
     try{
         await University.deleteMany({});
         fs.readFile('univData.csv', async(err, data) => { 
@@ -17,6 +19,6 @@ export const postUnivData = async(req, res) => {
         res.send("universities saved successfully");
     } catch(err) {
         console.log(err)
-        res.status(200).send("error saving university data");
+        res.status(400).send("error saving university data");
     }  
 }

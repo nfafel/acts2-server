@@ -10,7 +10,7 @@ exports.loginUser = async(req, res) => {
     const enteredPassword: String = req.body.password;
 
     try {
-        const user: IUser = await User.findOne({userName: username});
+        const user: IUser = await User.findOne({username: username});
         if (user === null) {
             res.send({message: "The username you entered is not registered."})
         } else if (user.password !== enteredPassword) {
