@@ -1,10 +1,13 @@
 const express = require('express');
-
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const http = require('http');
-
 const app = express();
+
+const user = require('./routes/user'); // Imports routes for the cars
+
+const University = require('./models/university');
+const {postUnivData} = require('./initializeUnivData/postUnivData');
 
 //Set up mongoose connection
 const mongoose = require('mongoose');
@@ -29,10 +32,13 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cors());
 
+app.use('/user', user);
+
 app.get('/version', (req, res) => {
     res.send( {version: `Current version of Node: ${process.version}`} );
 });
 
+app.get('/UnivData', postUnivData);
 
 const PORT = process.env.PORT || 5000;
 
