@@ -12,9 +12,9 @@ exports.loginUser = async(req, res) => {
     try {
         const user: IUser = await User.findOne({username: username});
         if (user === null) {
-            res.status(403).send({message: "Unregistered username"})
+            res.status(403).send({message: "username"})
         } else if (user.password !== enteredPassword) {
-            res.status(403).send({message: "Incorrect password"})
+            res.status(403).send({message: "password"})
         } else {
             const payload = {
                 username: user.username
