@@ -12,9 +12,9 @@ exports.loginUser = async(req, res) => {
     try {
         const user: IUser = await User.findOne({username: username});
         if (user === null) {
-            res.send({message: "The username you entered is not registered."})
+            res.status(403).send({message: "Unregistered username"})
         } else if (user.password !== enteredPassword) {
-            res.send({message: "Incorrect password"})
+            res.status(403).send({message: "Incorrect password"})
         } else {
             const payload = {
                 username: user.username
@@ -24,10 +24,9 @@ exports.loginUser = async(req, res) => {
             }, user.secret, { expiresIn: '12h' });
             res.send({token: token})
         }
-
     } catch(err) {
         console.log(err)
-        res.status(400).send({message: "Error Logging in User"})
+        res.status(400).send({message: "Error Logging in user"})
     }
 }
 
@@ -63,7 +62,7 @@ exports.createUser = async(req, res) => {
 
     } catch(err) {
         console.log(err);
-        res.status(400).send({message: "Error getting users"});
+        res.status(400).send({message: "Error creating user"});
     }
 }
 
@@ -74,6 +73,6 @@ exports.delete = async(req, res) => { //Verify JWT for this route
         res.send({userRemoved: req.params.number})
     } catch(err) {
         console.log(err)
-        res.status(400).send({message: "Error getting users"})
+        res.status(400).send({message: "Error deleting user"})
     }
 }
