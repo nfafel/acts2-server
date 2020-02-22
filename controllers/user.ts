@@ -5,10 +5,32 @@ const randomWords = require('random-words');
 
 const User = require('../models/user');
 
+exports.createUser = async(req, res) => {
+    try {
+        var newUser = new User({
+            ...req.body,
+            secret: randomWords()
+        });
+        await newUser.save();
+
+        const payload = {
+            username: newUser.username,
+        }
+        var token = jwt.sign({
+            payload: payload
+        }, newUser.secret, { expiresIn: '12h' });
+        res.send({token: token})
+
+    } catch(err) {
+        console.log(err);
+        res.status(400).send({message: "Error creating user"});
+    }
+}
+
 exports.loginUser = async(req, res) => {
     const username: String = req.body.username;
     const enteredPassword: String = req.body.password;
-
+    
     try {
         const user: IUser = await User.findOne({username: username});
         if (user === null) {
@@ -44,25 +66,25 @@ exports.checkAvailability = async(req, res) => {
     }
 }
 
-exports.createUser = async(req, res) => {
+exports.getUser = async(req, res) => {
     try {
-        var newUser = new User({
-            ...req.body,
-            secret: randomWords()
-        });
-        await newUser.save();
-
-        const payload = {
-            username: newUser.username,
-        }
-        var token = jwt.sign({
-            payload: payload
-        }, newUser.secret, { expiresIn: '12h' });
-        res.send({token: token})
+        const user: IUser = await User.findOne({username: req.params.username});
+        res.send({user: user});
 
     } catch(err) {
-        console.log(err);
-        res.status(400).send({message: "Error creating user"});
+        console.log(err)
+        res.status(400).send({message: "Error getting user"})
+    }
+}
+
+exports.updateUser = async(req, res) => {
+    try {
+        const userUpdates = req.body.updates;
+        const updatedUser: IUser = await User.findOneAndUpdate({username: req.params.username}, userUpdates, {useFindAndModify: false, runValidators: true, new: true });
+        res.send({updatedUser: updatedUser});
+    } catch(err) {
+        console.log(err)
+        res.status(400).send({message: "Error getting user"})
     }
 }
 

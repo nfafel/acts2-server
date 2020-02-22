@@ -1,11 +1,13 @@
 import mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
+import { IUser } from '../interfaces/IUser';
 
 let UserSchema = new Schema({
     username: {
         type: String, 
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -15,6 +17,14 @@ let UserSchema = new Schema({
         type: ObjectId,
         required: true
     },
+    profilePicture: {
+        type: Buffer, 
+        required: false
+    },
+    profilePictureContentType: {
+        type: String,
+        required: false
+    },
     secret: {
         type: String,
         required: true
@@ -22,4 +32,4 @@ let UserSchema = new Schema({
 });
 
 // Export the model
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model<IUser>('User', UserSchema);
