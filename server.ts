@@ -4,8 +4,10 @@ const cors = require('cors');
 const http = require('http');
 const app = express();
 
-const user = require('./routes/user'); // Imports routes for the cars
-const university = require('./routes/university'); // Imports routes for the cars
+const user = require('./routes/user'); // Imports routes for the user
+const university = require('./routes/university'); // Imports routes for the universities
+const image = require('./routes/image'); // Imports routes for the images
+
 
 const {postUnivData} = require('./initializeUnivData/postUnivData');
 
@@ -34,6 +36,7 @@ app.use(cors());
 
 app.use('/user', user);
 app.use('/university', university);
+app.use('/image', image);
 
 app.get('/version', (req, res) => {
     res.send( {version: `Current version of Node: ${process.version}`} );

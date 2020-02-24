@@ -7,6 +7,6 @@ exports.getSearchResults = async(req, res) => {
         res.send({universities: universities})
     } catch(err) {
         console.log(err);
-        res.status(400).send({message: "Error Logging in User"})
+        res.status(400).send({message: "Error getting results"})
     }
 }
