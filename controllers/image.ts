@@ -56,16 +56,19 @@ exports.uploadMany = async(req, res) => {
 }
 
 exports.getOne = async(req, res) => {
+    //May need to use s3.getObject(params).createReadStream() 
     const params = {
         Bucket: "acts2",
-        Key: req.body.imageKey
+        Key: "1582490074004"
+        // Key: get from fetching user closet items in future
     };
-    s3.getObject(params, (err, data) => {
+    
+    s3.getObject(params, (err, data) => {   
         if (err) {
             console.error(err);
-        }
-        console.log(data);
-        res.send({ image: data.Body });
+        } 
+        const imageBuff: Buffer = Buffer.from(data.Body);
+        res.send({ image: imageBuff.toString("base64") });
     });
 }
 

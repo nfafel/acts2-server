@@ -10,7 +10,7 @@ export const privateACL = 'bucket-owner-full-control';
 
 function checkFileType( file, cb ){
     // Allowed ext
-    const filetypes = /jpeg|jpg|png|gif/;
+    const filetypes = /jpeg|jpg|png|gif|heic/;
     // Check ext
     const extname = filetypes.test( path.extname( file.originalname ).toLowerCase());
     // Check mime
@@ -41,7 +41,7 @@ export const ms3 = multerS3({
 
 export const uploadOne = multer({
     storage: ms3,
-    limits:{ fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
+    limits:{ fileSize: 20000000 }, // In bytes: 20000000 bytes = 20 MB
     fileFilter: function( req, file, cb ){
         checkFileType( file, cb );
     }
@@ -49,7 +49,7 @@ export const uploadOne = multer({
 
 export const uploadMany = multer({
     storage: ms3,
-    limits:{ fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
+    limits:{ fileSize: 20000000 }, // In bytes: 2000000 bytes = 20 MB
     fileFilter: function( req, file, cb ) {
         checkFileType( file, cb );
     }
