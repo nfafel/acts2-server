@@ -21,10 +21,6 @@ let UserSchema = new Schema({
         type: Buffer, 
         required: false
     },
-    profilePictureContentType: {
-        type: String,
-        required: false
-    },
     secret: {
         type: String,
         required: true
