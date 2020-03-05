@@ -15,6 +15,7 @@ exports.createUser = async(req, res) => {
 
         const payload = {
             username: newUser.username,
+            universityId: newUser.universityId
         }
         var token = jwt.sign({
             payload: payload
@@ -39,7 +40,8 @@ exports.loginUser = async(req, res) => {
             res.status(403).send({message: "password"})
         } else {
             const payload = {
-                username: user.username
+                username: user.username,
+                universityId: user.universityId
             }
             var token = jwt.sign({
                 payload: payload

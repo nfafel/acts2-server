@@ -7,13 +7,12 @@ let ClosetItemSchema = new Schema({
     username: {
         type: String, 
         required: true,
-        unique: true
     },
     universityId: {
         type: ObjectId,
         required: true
     },
-    images: {
+    imageKeys: {
         type: Array, 
         required: true
     },
@@ -52,4 +51,4 @@ let ClosetItemSchema = new Schema({
 });
 
 // Export the model
-module.exports = mongoose.model<IClosetItem>('User', ClosetItemSchema);
+module.exports = mongoose.model<IClosetItem>('ClosetItem', ClosetItemSchema);

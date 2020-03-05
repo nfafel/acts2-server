@@ -4,13 +4,13 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 export interface IClosetItem {
     username: string,
     universityId: typeof ObjectId,
-    images: string[], //Change to IImage[]
+    imageKeys: string[],
+    createdAt: Date,
     gender: string,
     quality: number,
     brand: string,
     size: string,
     value?: string,
     publicity: string,
-    clothingType: string,
-    createdAt: Date
+    clothingType: string
 }

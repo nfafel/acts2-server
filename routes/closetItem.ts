@@ -3,9 +3,9 @@ const closetItemRouter = express.Router();
 
 const closetItem_controller = require('../controllers/closetItem');
 
-closetItemRouter.get('/:id', closetItem_controller.get);
-closetItemRouter.get('/:username', closetItem_controller.getByUser);
-closetItemRouter.get('/:universityId', closetItem_controller.getByUniversity);
+closetItemRouter.get('/:id', closetItem_controller.getOne);
+closetItemRouter.get('/user/:username', closetItem_controller.getByUser);
+closetItemRouter.get('/university/:universityId', closetItem_controller.getByUniversity);
 
 closetItemRouter.post('/', closetItem_controller.post);
 
