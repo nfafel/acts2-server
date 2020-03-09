@@ -8,19 +8,18 @@ exports.getOne = async(req, res) => {
     try{
         const closetItem: IClosetItem = await ClosetItem.findById(req.params.id);
         
-       const promises = closetItem.imageKeys.map((key: string) => {
+        const promises = closetItem.imageKeys.map((key: string) => {
             const params = {
                 Bucket: "acts2",
                 Key: key
             };
             return s3.getObject(params).promise();
         });
-        // const data = await 
         Promise.all(promises)
             .then((data: any[]) => {
                 const images = data.map((data) => {
                     const imageBuff: Buffer = Buffer.from(data.Body);
-                    return imageBuff.toString("base64");
+                    return {base64: imageBuff.toString("base64")};
                 });
                 const response: IClosetItemWImage = {
                     closetItem: closetItem,
@@ -56,7 +55,7 @@ exports.getByUser = async(req, res) => {
 
             const images = data.map((data: any) => {
                 const imageBuff: Buffer = Buffer.from(data.Body);
-                return imageBuff.toString("base64");
+                return {base64: imageBuff.toString("base64")};
             });
             const item: IClosetItemWImage = {
                 closetItem: promiseData.closetItem,
@@ -74,7 +73,7 @@ exports.getByUser = async(req, res) => {
 
 exports.getByUniversity = async(req, res) => {
     try{
-        const closetItems: IClosetItem[] = await ClosetItem.find({universityId: req.params.universityId});
+        const closetItems: IClosetItem[] = await ClosetItem.find({universityId: req.params.universityId, publicity: {$ne: "private"} });
         const nestedPromiseData: any[] = closetItems.map((item: IClosetItem) => {
             return {
                 closetItem: item,
@@ -94,7 +93,7 @@ exports.getByUniversity = async(req, res) => {
 
             const images = data.map((data: any) => {
                 const imageBuff: Buffer = Buffer.from(data.Body);
-                return imageBuff.toString("base64");
+                return {base64: imageBuff.toString("base64")};
             });
             const item: IClosetItemWImage = {
                 closetItem: promiseData.closetItem,
@@ -115,9 +114,9 @@ exports.post = async(req, res) => {
         uploadMany( req, res, async( error ) => {
             if ( error ){
                 console.log( 'errors', error );
-                res.send({error: error});
+                res.status(400).send({error: error});
             } else {
-                // If File not found
+                // If File not found 
                 if( req.files === undefined ){
                     console.log( 'Error: No Files Selected!' );
                     res.send( 'Error: No Files Selected' );

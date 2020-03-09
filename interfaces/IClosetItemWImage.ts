@@ -3,5 +3,5 @@ import {IImage} from './IImage';
 
 export interface IClosetItemWImage {
     closetItem: IClosetItem,
-    images: string[]
+    images: {base64: string}[]
 }
