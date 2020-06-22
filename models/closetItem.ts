@@ -51,4 +51,4 @@ let ClosetItemSchema = new Schema({
 });
 
 // Export the model
-module.exports = mongoose.model<IClosetItem>('ClosetItem', ClosetItemSchema);
+export const ClosetItem = mongoose.model<IClosetItem>('ClosetItem', ClosetItemSchema);

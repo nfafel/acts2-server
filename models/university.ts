@@ -10,4 +10,4 @@ let UniversitySchema = new Schema({
 });
 
 // Export the model
-module.exports = mongoose.model<IUniversity>('University', UniversitySchema);
+export const University = mongoose.model<IUniversity>('University', UniversitySchema);
