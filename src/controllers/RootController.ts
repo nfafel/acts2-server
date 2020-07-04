@@ -1,5 +1,6 @@
-import { IUniversity } from '../interfaces/IUniversity';
+// import { IUniversity } from '../interfaces/IUniversity';
 import { University } from '../models';
+import fs from 'fs';
 import Controller from '../lib/Controller';
 
 export default class RootController extends Controller {
@@ -19,23 +20,19 @@ export default class RootController extends Controller {
     }
 
     public async initializeUniversityData(req, res): Promise<void> {
-        const University = require('./models/university');
-        const fs = require('fs') 
-        
         try{
             await University.deleteMany({});
-            fs.readFile('../initializeUnivData/univData.csv', async(err, data) => { 
-                const dataString: string = data.toString();
-                const dataByLine: string[] = dataString.split("\n");
-                var line: any;
-                for (line of dataByLine) {
-                    var parsedLine: string[] = line.split(",");
-                    parsedLine.splice(2);
-                    const newUniv = new University({name: parsedLine[1].replace(/\"/g, "")});
-                    console.log(newUniv);
-                    await newUniv.save();
-                }
-            })
+            const buffer = fs.readFileSync('initializeUnivData/univData.csv');
+
+            const dataString: string = buffer.toString();
+            const dataByLine: string[] = dataString.split("\n");
+            dataByLine.map(line => {
+                var parsedLine: string[] = line.split(",");
+                parsedLine.splice(2);
+                const newUniv = new University({name: parsedLine[1].replace(/\"/g, "")});
+                return newUniv.save();
+            });
+
             res.send("universities saved successfully");
         } catch(err) {
             console.log(err)

@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import http, { Server } from 'http';
-
+import config from './config';
 import {
     ClosetItemController,
     RootController,
@@ -30,9 +30,9 @@ export default class App {
     private async configureMongoose(): Promise<void> {
         var MONGODB;
         if (process.env.NODE_ENV == 'test') {
-            MONGODB = process.env.MONGODBTEST || "mongodb://localhost:27017";
+            MONGODB = process.env.MONGODBTEST || 'mongodb://localhost:27017/acts2_test';
         } else {
-            MONGODB = process.env.MONGODB || "mongodb://localhost:27017";
+            MONGODB = process.env.MONGODB || config.MONGODB_CONNECTION_STRING || 'mongodb://localhost:27017/acts2_dev';
         }
 
         mongoose.connect(MONGODB, {
@@ -66,6 +66,7 @@ export default class App {
 
         this.express.set('port', PORT);
         this.server.listen(PORT);
+        console.log(`listening on port ${PORT}`);
     }
 }
 
