@@ -1,9 +1,8 @@
-import mongoose = require('mongoose');
-var ObjectId = mongoose.Schema.Types.ObjectId;
-
 export interface IClosetItem {
+    id: string,
+    userId: string,
     username: string,
-    universityId: typeof ObjectId,
+    universityId: string,
     imageKeys: string[],
     createdAt: Date,
     gender: string,
@@ -11,6 +10,5 @@ export interface IClosetItem {
     brand: string,
     size: string,
     value?: string,
-    publicity: string,
     clothingType: string
 }

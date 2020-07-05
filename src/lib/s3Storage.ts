@@ -1,4 +1,4 @@
-import config from '../config';
+import config from '../../config';
 
 import * as aws from 'aws-sdk';
 import multerS3 from 'multer-s3';
@@ -38,14 +38,6 @@ export const ms3 = multerS3({
         cb(null, Date.now().toString());
     },
 });
-
-// export const uploadOne = multer({
-//     storage: ms3,
-//     limits:{ fileSize: 20000000 }, // In bytes: 20000000 bytes = 20 MB
-//     fileFilter: function( req, file, cb ){
-//         checkFileType( file, cb );
-//     }
-// }).single('image');
 
 export const uploadMany = multer({
     storage: ms3,

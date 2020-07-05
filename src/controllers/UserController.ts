@@ -6,8 +6,9 @@ import randomWords from 'random-words';
 import { User } from '../models';
 import Controller from '../lib/Controller';
 
-export default class AvailabilityController extends Controller {
+export class UserController extends Controller {
     public async createUser(req, res) {
+        console.log("hello from suer controller");
         try {
             var newUser = new User({
                 ...req.body,
@@ -22,7 +23,7 @@ export default class AvailabilityController extends Controller {
             var token = jwt.sign({
                 payload: payload
             }, newUser.secret, { expiresIn: '12h' });
-            res.send({token: token})
+            res.send({token: token});
 
         } catch(err) {
             console.log(err);
@@ -31,8 +32,8 @@ export default class AvailabilityController extends Controller {
     }
 
     public async loginUser(req, res) {
-        const username: String = req.body.username;
-        const enteredPassword: String = req.body.password;
+        const username: string = req.body.username;
+        const enteredPassword: string = req.body.password;
         
         try {
             const user: IUser = await User.findOne({username: username});
@@ -84,7 +85,7 @@ export default class AvailabilityController extends Controller {
     public async updateUser(req, res) {
         try {
             const userUpdates = req.body.updates;
-            const updatedUser: IUser = await User.findOneAndUpdate({username: req.params.username}, userUpdates, {useFindAndModify: false, runValidators: true, new: true });
+            const updatedUser: IUser = await User.findOneAndUpdate({username: req.params.username}, userUpdates, {runValidators: true, new: true });
             res.send({updatedUser: updatedUser});
         } catch(err) {
             console.log(err)

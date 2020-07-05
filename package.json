@@ -5,18 +5,20 @@
   "main": "server.js",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -Rf ./build",
-    "start": "npm run clean && npm run build && node built/server.js",
+    "clean": "rm -Rf ./built",
+    "start": "npm run clean && npm run build && node built/src/server.js",
     "test": "npm test"
   },
   "author": "Nicholas Fafel",
   "license": "ISC",
   "dependencies": {
+    "@types/mongoose": "^5.7.29",
     "@types/multer-s3": "^2.7.7",
     "@types/node": "^13.7.1",
     "aws-sdk": "^2.624.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "cuid": "^2.1.8",
     "express": "^4.17.1",
     "http": "0.0.0",
     "jsonwebtoken": "^8.5.1",

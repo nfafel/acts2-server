@@ -1,9 +1,20 @@
-import mongoose = require('mongoose');
+import mongoose, { Document } from 'mongoose';
+import cuid from 'cuid';
+import { IUser } from '../interfaces';
 const Schema = mongoose.Schema;
-const ObjectId = mongoose.Schema.Types.ObjectId;
-import { IUser } from '../interfaces/IUser';
+
+const schemaPrefix = 'us_';
+
+export interface IUserDocument extends IUser, Document{
+    id: string;
+};
 
 let UserSchema = new Schema({
+    id: {
+        type: String,
+        unique: true,
+        default: `${schemaPrefix}${cuid()}`,
+    },
     username: {
         type: String, 
         required: true,
@@ -14,7 +25,7 @@ let UserSchema = new Schema({
         required: true
     },
     universityId: {
-        type: ObjectId,
+        type: String,
         required: true
     },
     profilePicture: {
@@ -28,4 +39,4 @@ let UserSchema = new Schema({
 });
 
 // Export the model
-export const User = mongoose.model<IUser>('User', UserSchema);
+export const User = mongoose.model<IUserDocument>('User', UserSchema);

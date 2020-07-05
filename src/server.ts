@@ -3,12 +3,14 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import http, { Server } from 'http';
-import config from './config';
+import config from '../config';
 import {
     ClosetItemController,
     RootController,
     UniversityController,
     UserController,
+    ChatController,
+    MessageController,
 } from './controllers';
 
 import {
@@ -57,6 +59,8 @@ export default class App {
         this.express.use('/user', new UserController().router);
         this.express.use('/university', new UniversityController().router);
         this.express.use('/closet-item', new ClosetItemController().router);
+        this.express.use('/chat', new ChatController().router);
+        this.express.use('/message', new MessageController().router);
 
         this.express.use(notFound);
         this.express.use(validationErrorHandler);

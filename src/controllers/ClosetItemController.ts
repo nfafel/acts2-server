@@ -5,7 +5,7 @@ import { s3 } from '../lib/s3Storage';
 import { IClosetItemWImage } from "../interfaces/IClosetItemWImage";
 import Controller from '../lib/Controller';
 
-export default class ClosetItemController extends Controller {
+export class ClosetItemController extends Controller {
     public async getOne(req, res) {
         try{
             const closetItem: IClosetItem = await ClosetItem.findById(req.params.id);
@@ -146,7 +146,7 @@ export default class ClosetItemController extends Controller {
     public async put(req, res) {
         try{
             const updates: IClosetItem = req.body.updates;
-            const result: IClosetItem = ClosetItem.findByIdAndUpdate(req.body.closetItemId, updates, {useFindAndModify: false, runValidators: true, new: true });
+            const result: IClosetItem = await ClosetItem.findByIdAndUpdate(req.body.closetItemId, updates, {runValidators: true, new: true });
             res.send({updatedItem: result});
         } catch(err) {
             console.log(err);

@@ -1,19 +1,34 @@
-import mongoose = require('mongoose');
+import mongoose, { Document } from 'mongoose';
+import cuid from 'cuid';
+import { IClosetItem } from '../interfaces';
 const Schema = mongoose.Schema;
-const ObjectId = mongoose.Schema.Types.ObjectId;
-import { IClosetItem } from '../interfaces/IClosetItem';
+
+const schemaPrefix = 'cl_';
+
+export interface IClosetItemDocument extends IClosetItem, Document{
+    id: string;
+};
 
 let ClosetItemSchema = new Schema({
+    id: {
+        type: String, 
+        unique: true,
+        default: `${schemaPrefix}${cuid()}`
+    },
+    userId: {
+        type: String, 
+        required: true,
+    },
     username: {
         type: String, 
         required: true,
     },
     universityId: {
-        type: ObjectId,
+        type: String,
         required: true
     },
     imageKeys: {
-        type: Array, 
+        type: [String], 
         required: true
     },
     gender: {
@@ -36,10 +51,6 @@ let ClosetItemSchema = new Schema({
         type: String, 
         required: true,
     },
-    publicity: {
-        type: String, 
-        required: true,
-    },
     clothingType: {
         type: String, 
         required: true,
@@ -51,4 +62,4 @@ let ClosetItemSchema = new Schema({
 });
 
 // Export the model
-export const ClosetItem = mongoose.model<IClosetItem>('ClosetItem', ClosetItemSchema);
+export const ClosetItem = mongoose.model<IClosetItemDocument>('ClosetItem', ClosetItemSchema);

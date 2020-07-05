@@ -3,7 +3,7 @@ import { University } from '../models';
 import fs from 'fs';
 import Controller from '../lib/Controller';
 
-export default class RootController extends Controller {
+export class RootController extends Controller {
 
     public async healthCheck(req, res): Promise<void> {
         res.status(200).send({
