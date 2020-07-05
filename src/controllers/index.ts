@@ -4,6 +4,8 @@ import { UniversityController } from './UniversityController';
 import { UserController } from './UserController';
 import { MessageController } from './MessageController';
 import { ChatController } from './ChatController';
+import { AuthorizationController } from './AuthorizationController';
+
 
 export {
     ClosetItemController,
@@ -12,4 +14,5 @@ export {
     UserController,
     MessageController,
     ChatController,
+    AuthorizationController,
 }

@@ -1,6 +1,5 @@
 import { IUser } from "../interfaces/IUser";
 
-import jwt from 'jsonwebtoken';
 import randomWords from 'random-words';
 
 import { User } from '../models';
@@ -8,7 +7,6 @@ import Controller from '../lib/Controller';
 
 export class UserController extends Controller {
     public async createUser(req, res) {
-        console.log("hello from suer controller");
         try {
             var newUser = new User({
                 ...req.body,
@@ -16,48 +14,13 @@ export class UserController extends Controller {
             });
             await newUser.save();
 
-            const payload = {
-                username: newUser.username,
-                universityId: newUser.universityId
-            }
-            var token = jwt.sign({
-                payload: payload
-            }, newUser.secret, { expiresIn: '12h' });
-            res.send({token: token});
-
         } catch(err) {
             console.log(err);
             res.status(400).send({message: "Error creating user"});
         }
     }
 
-    public async loginUser(req, res) {
-        const username: string = req.body.username;
-        const enteredPassword: string = req.body.password;
-        
-        try {
-            const user: IUser = await User.findOne({username: username});
-            if (user === null) {
-                res.status(403).send({message: "username"})
-            } else if (user.password !== enteredPassword) {
-                res.status(403).send({message: "password"})
-            } else {
-                const payload = {
-                    username: user.username,
-                    universityId: user.universityId
-                }
-                var token = jwt.sign({
-                    payload: payload
-                }, user.secret, { expiresIn: '12h' });
-                res.send({token: token})
-            }
-        } catch(err) {
-            console.log(err)
-            res.status(400).send({message: "Error Logging in user"})
-        }
-    }
-
-    public async checkAvailability(req, res) {
+    public async checkUsernameAvailability(req, res) {
         try {
             const user: IUser = await User.findOne({username: req.params.username});
             if (user === null) {
@@ -105,10 +68,9 @@ export class UserController extends Controller {
     }
 
     protected initializeRoutes(): void {
-        this.router.get('/:username/availability', this.checkAvailability);
+        this.router.get('/:username/availability', this.checkUsernameAvailability);
         this.router.get('/:username', this.getUser);
 
-        this.router.post('/login', this.loginUser);
         this.router.post('/', this.createUser);
 
         this.router.put('/:username', this.updateUser);
