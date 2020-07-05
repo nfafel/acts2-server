@@ -8,12 +8,12 @@ import Controller from '../lib/Controller';
 export class UserController extends Controller {
     public async createUser(req, res) {
         try {
-            var newUser = new User({
+            const newUser = await new User({
                 ...req.body,
                 secret: randomWords()
-            });
-            await newUser.save();
-
+            }).save();
+            
+            res.status(201).send(newUser);
         } catch(err) {
             console.log(err);
             res.status(400).send({message: "Error creating user"});
