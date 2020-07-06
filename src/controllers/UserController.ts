@@ -12,7 +12,7 @@ export class UserController extends Controller {
                 ...req.body,
                 secret: randomWords()
             }).save();
-            
+
             res.status(201).send(newUser);
         } catch(err) {
             console.log(err);
