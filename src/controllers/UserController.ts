@@ -36,8 +36,8 @@ export class UserController extends Controller {
 
     public async getUser(req, res) {
         try {
-            const user: IUser = await User.findOne({username: req.params.username});
-            res.send({user: user});
+            const user: IUser = await User.findById(req.params.id);
+            res.status(200).send(user);
 
         } catch(err) {
             console.log(err)
@@ -48,8 +48,8 @@ export class UserController extends Controller {
     public async updateUser(req, res) {
         try {
             const userUpdates = req.body.updates;
-            const updatedUser: IUser = await User.findOneAndUpdate({username: req.params.username}, userUpdates, {runValidators: true, new: true });
-            res.send({updatedUser: updatedUser});
+            const updatedUser: IUser = await User.findByIdAndUpdate(req.params.id, userUpdates, {runValidators: true, new: true });
+            res.status(200).send(updatedUser);
         } catch(err) {
             console.log(err)
             res.status(400).send({message: "Error getting user"})
@@ -58,9 +58,9 @@ export class UserController extends Controller {
 
     public async delete(req, res) { //Verify JWT for this route
         try {
-            await User.deleteOne({username: req.params.username});
+            await User.findByIdAndRemove(req.params.id);
             //Delete their items and posts here
-            res.send({userRemoved: req.params.number})
+            res.status(200).send(req.params)
         } catch(err) {
             console.log(err)
             res.status(400).send({message: "Error deleting user"})
@@ -69,13 +69,13 @@ export class UserController extends Controller {
 
     protected initializeRoutes(): void {
         this.router.get('/:username/availability', this.checkUsernameAvailability);
-        this.router.get('/:username', this.getUser);
+        this.router.get('/:id', this.getUser);
 
         this.router.post('/', this.createUser);
 
-        this.router.put('/:username', this.updateUser);
+        this.router.put('/:id', this.updateUser);
 
-        this.router.delete('/', this.delete);
+        this.router.delete('/:id', this.delete);
 
     }
 }

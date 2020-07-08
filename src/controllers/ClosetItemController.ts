@@ -37,7 +37,7 @@ export class ClosetItemController extends Controller {
 
     public async getByUser(req, res) {
         try{
-            const closetItems: IClosetItem[] = await ClosetItem.find({username: req.params.username});
+            const closetItems: IClosetItem[] = await ClosetItem.find({user_id: req.params.user_id});
             const nestedPromiseData: any[] = closetItems.map((item: IClosetItem) => {
                 return {
                     closetItem: item,
@@ -75,7 +75,7 @@ export class ClosetItemController extends Controller {
 
     public async getByUniversity(req, res) {
         try{
-            const closetItems: IClosetItem[] = await ClosetItem.find({universityId: req.params.universityId, publicity: {$ne: "private"} });
+            const closetItems: IClosetItem[] = await ClosetItem.find({universityId: req.params.university_id, publicity: {$ne: "private"} });
             const nestedPromiseData: any[] = closetItems.map((item: IClosetItem) => {
                 return {
                     closetItem: item,
@@ -111,7 +111,7 @@ export class ClosetItemController extends Controller {
         }
     }
 
-    public async post(req, res) {
+    public async create(req, res) {
         try{
             uploadMany( req, res, async( error ) => {
                 if ( error ){
@@ -143,7 +143,7 @@ export class ClosetItemController extends Controller {
         }
     }
 
-    public async put(req, res) {
+    public async update(req, res) {
         try{
             const updates: IClosetItem = req.body.updates;
             const result: IClosetItem = await ClosetItem.findByIdAndUpdate(req.body.closetItemId, updates, {runValidators: true, new: true });
@@ -183,12 +183,12 @@ export class ClosetItemController extends Controller {
 
     protected initializeRoutes(): void {
         this.router.get('/:id', this.getOne);
-        this.router.get('/user/:username', this.getByUser);
-        this.router.get('/university/:universityId', this.getByUniversity);
+        this.router.get('/:user_id/user', this.getByUser);
+        this.router.get('/:university_id/university', this.getByUniversity);
 
-        this.router.post('/', this.post);
+        this.router.post('/', this.create);
 
-        this.router.put('/', this.post);
+        this.router.put('/:id', this.update);
 
         this.router.delete('/:id', this.delete);
     }
