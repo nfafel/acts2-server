@@ -9,11 +9,15 @@ export interface IUserDocument extends IUser, Document{
     id: string;
 };
 
+const getDefaultId = (): string => {
+    return `${schemaPrefix}${cuid()}`;
+}
+
 let UserSchema = new Schema({
     id: {
         type: String,
         unique: true,
-        default: `${schemaPrefix}${cuid()}`,
+        default: getDefaultId,
     },
     username: {
         type: String, 

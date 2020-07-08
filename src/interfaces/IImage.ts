@@ -1,3 +1,4 @@
 export interface IImage {
-    uri: string
+    key: string;
+    url: string;
 }

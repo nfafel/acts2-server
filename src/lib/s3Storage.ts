@@ -18,7 +18,7 @@ function checkFileType( file, cb ){
     if( mimetype && extname ){
         return cb( null, true );
     } else {
-        cb( 'Error: Images Only!' );
+        cb('Error: Images Only!');
     }
 }
 
@@ -32,7 +32,7 @@ export const s3 = new aws.S3({
 export const ms3 = multerS3({
     s3: s3,
     bucket: "acts2",
-    acl: privateACL,
+    acl: publicACL,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file: any, cb) => {
         cb(null, Date.now().toString());
@@ -42,7 +42,7 @@ export const ms3 = multerS3({
 export const uploadMany = multer({
     storage: ms3,
     limits:{ fileSize: 20000000 }, // In bytes: 2000000 bytes = 20 MB
-    fileFilter: function( req, file, cb ) {
-        checkFileType( file, cb );
+    fileFilter: function(req, file, cb) {
+        checkFileType(file, cb);
     }
 }).array('images', 8);

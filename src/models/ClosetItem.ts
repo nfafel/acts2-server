@@ -9,11 +9,15 @@ export interface IClosetItemDocument extends IClosetItem, Document{
     id: string;
 };
 
+const getDefaultId = (): string => {
+    return `${schemaPrefix}${cuid()}`;
+}
+
 let ClosetItemSchema = new Schema({
     id: {
         type: String, 
         unique: true,
-        default: `${schemaPrefix}${cuid()}`
+        default: getDefaultId
     },
     userId: {
         type: String, 
@@ -27,8 +31,19 @@ let ClosetItemSchema = new Schema({
         type: String,
         required: true
     },
-    imageKeys: {
-        type: [String], 
+    images: {
+        type: [
+            {
+                key: {
+                    required: true,
+                    type: String,
+                },
+                url: {
+                    required: true,
+                    type: String,
+                }
+            }
+        ], 
         required: true
     },
     gender: {
@@ -49,7 +64,7 @@ let ClosetItemSchema = new Schema({
     },
     value: {
         type: String, 
-        required: true,
+        required: false,
     },
     clothingType: {
         type: String, 

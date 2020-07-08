@@ -9,11 +9,15 @@ export interface IUniversityDocument extends IUniversity, Document{
     id: string;
 };
 
+const getDefaultId = (): string => {
+    return `${schemaPrefix}${cuid()}`;
+}
+
 let UniversitySchema = new Schema({
     id: {
         type: String,
         unique: true,
-        default: `${schemaPrefix}${cuid()}`,
+        default: getDefaultId,
     },
     name: {
         type: String,

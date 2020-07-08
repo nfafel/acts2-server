@@ -9,11 +9,15 @@ export interface IMessageDocument extends IMessage, Document{
     id: string;
 };
 
+const getDefaultId = (): string => {
+    return `${schemaPrefix}${cuid()}`;
+}
+
 let MessageSchema = new Schema({
     id: {
         type: String, 
         unique: true,
-        default: `${schemaPrefix}${cuid()}`,
+        default: getDefaultId,
     },
     userId: {
         type: String, 

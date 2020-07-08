@@ -9,11 +9,15 @@ export interface IChatDocument extends IChat, Document{
     id: string;
 };
 
+const getDefaultId = (): string => {
+    return `${schemaPrefix}${cuid()}`;
+}
+
 let ChatSchema = new Schema({
     id: {
         type: String, 
         unique: true,
-        default: `${schemaPrefix}${cuid()}`
+        default: getDefaultId
     },
     firstUserId: {
         type: String,

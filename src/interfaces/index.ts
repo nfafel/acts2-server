@@ -1,5 +1,4 @@
 import { IClosetItem } from './IClosetItem';
-import { IClosetItemWImage } from './IClosetItemWImage';
 import { IImage } from './IImage';
 import { IUniversity } from './IUniversity';
 import { IUser } from './IUser';
@@ -9,7 +8,6 @@ import { INewMessageData } from './INewMessageData'
 
 export {
     IClosetItem,
-    IClosetItemWImage,
     IImage,
     IUniversity,
     IUser,

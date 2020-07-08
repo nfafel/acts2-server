@@ -2,33 +2,20 @@ import { IClosetItem } from "../interfaces/IClosetItem";
 import { ClosetItem } from '../models';
 import { uploadMany } from '../lib/s3Storage';
 import { s3 } from '../lib/s3Storage';
-import { IClosetItemWImage } from "../interfaces/IClosetItemWImage";
 import Controller from '../lib/Controller';
+import { IImage } from "../interfaces";
 
 export class ClosetItemController extends Controller {
     public async getOne(req, res) {
         try{
-            const closetItem: IClosetItem = await ClosetItem.findOne({id: req.params.id});
-            
-            const promises = closetItem.imageKeys.map((key: string) => {
-                const params = {
-                    Bucket: "acts2",
-                    Key: key
-                };
-                return s3.getObject(params).promise();
-            });
-            Promise.all(promises)
-                .then((data: any[]) => {
-                    const images = data.map((data) => {
-                        const imageBuff: Buffer = Buffer.from(data.Body);
-                        return {base64: imageBuff.toString("base64")};
-                    });
-                    const response: IClosetItemWImage = {
-                        closetItem: closetItem,
-                        images: images
-                    };
-                    res.send({data: response});
-                })
+            const closetItem = await ClosetItem.findOne({id: req.params.id});
+            if (!closetItem) {
+                res.status(404).send({
+                    code: 404,
+                    message: 'Closet Item not found.'
+                });
+            }
+            res.status(200).send(closetItem);
         } catch(err) {
             console.log(err);
             res.status(400).send("Error getting Closet Item")
@@ -38,35 +25,7 @@ export class ClosetItemController extends Controller {
     public async getByUser(req, res) {
         try{
             const closetItems: IClosetItem[] = await ClosetItem.find({user_id: req.params.user_id});
-            const nestedPromiseData: any[] = closetItems.map((item: IClosetItem) => {
-                return {
-                    closetItem: item,
-                    imagePromises: item.imageKeys.map(key => {
-                        const params = {
-                            Bucket: "acts2",
-                            Key: key
-                        };
-                        return s3.getObject(params).promise();
-                    })
-                }
-            });
-
-            var closetItemsWImages: IClosetItemWImage[] = [];
-            Promise.all(nestedPromiseData.map(async(promiseData) => {
-                const data = await Promise.all(promiseData.imagePromises);
-
-                const images = data.map((data: any) => {
-                    const imageBuff: Buffer = Buffer.from(data.Body);
-                    return {base64: imageBuff.toString("base64")};
-                });
-                const item: IClosetItemWImage = {
-                    closetItem: promiseData.closetItem,
-                    images: images
-                };
-                closetItemsWImages.push(item);
-            })).then(() => {
-                res.send({closetItems: closetItemsWImages});
-            });
+            res.status(200).send(closetItems);
         } catch(err) {
             console.log(err);
             res.status(400).send("Error getting Closet Items by User")
@@ -76,35 +35,7 @@ export class ClosetItemController extends Controller {
     public async getByUniversity(req, res) {
         try{
             const closetItems: IClosetItem[] = await ClosetItem.find({universityId: req.params.university_id, publicity: {$ne: "private"} });
-            const nestedPromiseData: any[] = closetItems.map((item: IClosetItem) => {
-                return {
-                    closetItem: item,
-                    imagePromises: item.imageKeys.map(key => {
-                        const params = {
-                            Bucket: "acts2",
-                            Key: key
-                        };
-                        return s3.getObject(params).promise();
-                    })
-                }
-            });
-
-            var closetItemsWImages: IClosetItemWImage[] = [];
-            Promise.all(nestedPromiseData.map(async(promiseData) => {
-                const data = await Promise.all(promiseData.imagePromises);
-
-                const images = data.map((data: any) => {
-                    const imageBuff: Buffer = Buffer.from(data.Body);
-                    return {base64: imageBuff.toString("base64")};
-                });
-                const item: IClosetItemWImage = {
-                    closetItem: promiseData.closetItem,
-                    images: images
-                };
-                closetItemsWImages.push(item);
-            })).then(() => {
-                res.send({closetItems: closetItemsWImages});
-            });
+            res.status(200).send(closetItems);
         } catch(err) {
             console.log(err);
             res.status(400).send("Error getting Closet Items by University")
@@ -113,27 +44,43 @@ export class ClosetItemController extends Controller {
 
     public async create(req, res) {
         try{
-            uploadMany( req, res, async( error ) => {
+            //Check if await below solves the problem of inconsistent adds/deletes: await uploadMany...
+            uploadMany(req, res, async( error ) => {
                 if ( error ){
                     console.log( 'errors', error );
                     res.status(400).send({error: error});
                 } else {
                     // If File not found 
                     if( req.files === undefined ){
-                        console.log( 'Error: No Files Selected!' );
-                        res.send( 'Error: No Files Selected' );
+                        console.log('Error: No Files Selected!');
+                        res.status(400).send({
+                            code: 400,
+                            message: 'Error: No Files Selected',
+                        });
                     } else {
                         // If Success
-                        const imageKeys = req.files.map(file => file.key);
+                        const images: IImage[] = req.files.map(file => ({
+                            key: file.key,
+                            url: file.location
+                        }));
                         // Save the file names into database into closetItems model
                         const newItemValues: IClosetItem = {
-                            imageKeys: imageKeys,
+                            images: images,
                             createdAt: new Date(),
                             ...req.body
                         };
-                        const newItem = new ClosetItem(newItemValues);
-                        const closetItem: IClosetItem = await newItem.save();
-                        res.send({newItem: closetItem});
+                        try {
+                            const newClosetItem = await new ClosetItem(newItemValues).save();
+                            res.status(200).send(newClosetItem);
+                        } catch(err) {
+                            console.log(err);
+                            res.status(400).send({
+                                code: 400,
+                                name: err.name,
+                                message: err.errmsg,
+                            });
+                        }
+                        
                     }
                 }
             });
@@ -160,12 +107,13 @@ export class ClosetItemController extends Controller {
             const params = {
                 Bucket: "acts2",
                 Delete: {
-                    Objects: closetItem.imageKeys.map(key => {
-                        return {Key: key}
+                    Objects: closetItem.images.map(image => {
+                        return {Key: image.key}
                     }), 
                     Quiet: false
                 }
             }
+            //Check if await below solves the problem of inconsistent adds/deletes: await s3.deleteObjects...
             s3.deleteObjects(params, async(err) => {
                 if (err) {
                     console.log(err);
