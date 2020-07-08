@@ -36,7 +36,7 @@ export class UserController extends Controller {
 
     public async getUser(req, res) {
         try {
-            const user: IUser = await User.findById(req.params.id);
+            const user: IUser = await User.findOne({id: req.params.id});
             res.status(200).send(user);
 
         } catch(err) {
@@ -48,7 +48,7 @@ export class UserController extends Controller {
     public async updateUser(req, res) {
         try {
             const userUpdates = req.body.updates;
-            const updatedUser: IUser = await User.findByIdAndUpdate(req.params.id, userUpdates, {runValidators: true, new: true });
+            const updatedUser: IUser = await User.findOneAndUpdate({id: req.params.id}, userUpdates, {runValidators: true, new: true });
             res.status(200).send(updatedUser);
         } catch(err) {
             console.log(err)
@@ -58,7 +58,7 @@ export class UserController extends Controller {
 
     public async delete(req, res) { //Verify JWT for this route
         try {
-            await User.findByIdAndRemove(req.params.id);
+            await User.findOneAndRemove({id: req.params.id});
             //Delete their items and posts here
             res.status(200).send(req.params)
         } catch(err) {

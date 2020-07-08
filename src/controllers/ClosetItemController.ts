@@ -8,7 +8,7 @@ import Controller from '../lib/Controller';
 export class ClosetItemController extends Controller {
     public async getOne(req, res) {
         try{
-            const closetItem: IClosetItem = await ClosetItem.findById(req.params.id);
+            const closetItem: IClosetItem = await ClosetItem.findOne({id: req.params.id});
             
             const promises = closetItem.imageKeys.map((key: string) => {
                 const params = {
@@ -146,7 +146,7 @@ export class ClosetItemController extends Controller {
     public async update(req, res) {
         try{
             const updates: IClosetItem = req.body.updates;
-            const result: IClosetItem = await ClosetItem.findByIdAndUpdate(req.body.closetItemId, updates, {runValidators: true, new: true });
+            const result: IClosetItem = await ClosetItem.findOneAndUpdate({id: req.body.closetItemId}, updates, {runValidators: true, new: true });
             res.send({updatedItem: result});
         } catch(err) {
             console.log(err);
@@ -156,7 +156,7 @@ export class ClosetItemController extends Controller {
 
     public async delete(req, res) {
         try{
-            const closetItem: IClosetItem = await ClosetItem.findById(req.params.id);
+            const closetItem: IClosetItem = await ClosetItem.findOne({id: req.params.id});
             const params = {
                 Bucket: "acts2",
                 Delete: {
@@ -171,7 +171,7 @@ export class ClosetItemController extends Controller {
                     console.log(err);
                     res.status(400).send("Error Deleting Closet Item");
                 } else {
-                    await ClosetItem.findByIdAndRemove(req.params.id);
+                    await ClosetItem.findOneAndRemove({id: req.params.id});
                     res.send({deletedId: req.params.id});
                 }
             });

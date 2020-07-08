@@ -24,13 +24,13 @@ export class MessageController extends Controller {
     public async put(req, res) {
         const messageId = req.params.id;
         const newText = req.body.text;
-        const updatedMessage = await Message.findByIdAndUpdate(messageId, {text: newText}, {runValidators: true, new: true });
+        const updatedMessage = await Message.findOneAndUpdate({id: messageId}, {text: newText}, {runValidators: true, new: true });
         res.status(200).send(updatedMessage);
     }
 
     public async delete(req, res) {
         const messageId = req.params.id;
-        const deletedMessage = await Message.findByIdAndRemove(messageId);
+        const deletedMessage = await Message.findOneAndRemove({id: messageId});
         res.status(200).send(deletedMessage.id);
     }
 
