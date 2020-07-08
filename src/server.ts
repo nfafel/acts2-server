@@ -57,7 +57,7 @@ export default class App {
         this.express.use(cors());
 
         this.express.use('/', new RootController().router);
-        this.express.use('/authorization', new RootController().router);
+        this.express.use('/authorization', new AuthorizationController().router);
         this.express.use('/user', new UserController().router);
         this.express.use('/university', new UniversityController().router);
         this.express.use('/closet-item', new ClosetItemController().router);

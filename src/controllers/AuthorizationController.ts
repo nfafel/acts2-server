@@ -10,7 +10,6 @@ export class AuthorizationController extends Controller {
     public async loginUser(req, res) {
         const username: string = req.body.username;
         const enteredPassword: string = req.body.password;
-        
         try {
             const user: IUser = await User.findOne({username: username});
             if (user === null) {
@@ -25,7 +24,7 @@ export class AuthorizationController extends Controller {
                 var token = jwt.sign({
                     payload: payload
                 }, user.secret, { expiresIn: '12h' });
-                res.send({token: token})
+                res.status(200).send({token: token})
             }
         } catch(err) {
             console.log(err)
@@ -34,6 +33,6 @@ export class AuthorizationController extends Controller {
     }
 
     protected initializeRoutes(): void {
-        this.router.get('/', this.loginUser);
+        this.router.post('/', this.loginUser);
     }
 }
