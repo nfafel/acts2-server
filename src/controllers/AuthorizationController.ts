@@ -18,7 +18,7 @@ export class AuthorizationController extends Controller {
                 res.status(403).send({message: "password"})
             } else {
                 const payload = {
-                    userId: user.username,
+                    userId: user.id,
                 }
                 var token = jwt.sign({
                     payload: payload
