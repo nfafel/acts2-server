@@ -1,11 +1,11 @@
 import mongoose, { Document } from 'mongoose';
 import cuid from 'cuid';
-import { IClosetItem } from '../interfaces';
+import { IItem } from '../interfaces';
 const Schema = mongoose.Schema;
 
 const schemaPrefix = 'cl_';
 
-export interface IClosetItemDocument extends IClosetItem, Document{
+export interface IItemDocument extends IItem, Document{
     id: string;
 };
 
@@ -13,7 +13,7 @@ const getDefaultId = (): string => {
     return `${schemaPrefix}${cuid()}`;
 }
 
-let ClosetItemSchema = new Schema({
+let ItemSchema = new Schema({
     id: {
         type: String, 
         unique: true,
@@ -77,4 +77,4 @@ let ClosetItemSchema = new Schema({
 });
 
 // Export the model
-export const ClosetItem = mongoose.model<IClosetItemDocument>('ClosetItem', ClosetItemSchema);
+export const Item = mongoose.model<IItemDocument>('Item', ItemSchema);

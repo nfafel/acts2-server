@@ -1,44 +1,43 @@
-import { IClosetItem } from "../interfaces/IClosetItem";
-import { ClosetItem } from '../models';
+import { Item } from '../models';
 import { uploadMany } from '../lib/s3Storage';
 import { s3 } from '../lib/s3Storage';
 import Controller from '../lib/Controller';
-import { IImage } from "../interfaces";
+import { IImage, IItem } from '../interfaces';
 
-export class ClosetItemController extends Controller {
+export class ItemController extends Controller {
     public async getOne(req, res) {
         try{
-            const closetItem = await ClosetItem.findOne({id: req.params.id});
-            if (!closetItem) {
+            const item = await Item.findOne({id: req.params.id});
+            if (!item) {
                 res.status(404).send({
                     code: 404,
-                    message: 'Closet Item not found.'
+                    message: 'Item not found.'
                 });
             }
-            res.status(200).send(closetItem);
+            res.status(200).send(item);
         } catch(err) {
             console.log(err);
-            res.status(400).send("Error getting Closet Item")
+            res.status(400).send("Error getting Item")
         }
     }
 
     public async getByUser(req, res) {
         try{
-            const closetItems: IClosetItem[] = await ClosetItem.find({user_id: req.params.user_id});
-            res.status(200).send(closetItems);
+            const items: IItem[] = await Item.find({userId: req.params.user_id});
+            res.status(200).send(items);
         } catch(err) {
             console.log(err);
-            res.status(400).send("Error getting Closet Items by User")
+            res.status(400).send("Error getting Items by User")
         }
     }
 
     public async getByUniversity(req, res) {
         try{
-            const closetItems: IClosetItem[] = await ClosetItem.find({universityId: req.params.university_id, publicity: {$ne: "private"} });
-            res.status(200).send(closetItems);
+            const items: IItem[] = await Item.find({ universityId: req.params.university_id });
+            res.status(200).send(items);
         } catch(err) {
             console.log(err);
-            res.status(400).send("Error getting Closet Items by University")
+            res.status(400).send("Error getting Items by University")
         }
     }
 
@@ -63,15 +62,15 @@ export class ClosetItemController extends Controller {
                             key: file.key,
                             url: file.location
                         }));
-                        // Save the file names into database into closetItems model
-                        const newItemValues: IClosetItem = {
+                        // Save the file names into database into Items model
+                        const newItemValues: IItem = {
                             images: images,
                             createdAt: new Date(),
                             ...req.body
                         };
                         try {
-                            const newClosetItem = await new ClosetItem(newItemValues).save();
-                            res.status(200).send(newClosetItem);
+                            const newItem = await new Item(newItemValues).save();
+                            res.status(200).send(newItem);
                         } catch(err) {
                             console.log(err);
                             res.status(400).send({
@@ -86,44 +85,44 @@ export class ClosetItemController extends Controller {
             });
         } catch(err) {
             console.log(err);
-            res.status(400).send("Error Creating Closet Item")
+            res.status(400).send("Error Creating Item")
         }
     }
 
     public async update(req, res) {
         try{
-            const updates: IClosetItem = req.body.updates;
-            const updatedClosetItem: IClosetItem = await ClosetItem.findOneAndUpdate({id: req.body.closetItemId}, updates, {runValidators: true, new: true });
+            const updates: IItem = req.body.updates;
+            const updatedItem: IItem = await Item.findOneAndUpdate({id: req.body.itemId}, updates, {runValidators: true, new: true });
 
-            if (!updatedClosetItem) {
+            if (!updatedItem) {
                 res.status(400).send({
                     code: 404,
-                    message: 'Closet Item not found',
+                    message: 'Item not found',
                 });
             }
 
-            res.send(updatedClosetItem);
+            res.send(updatedItem);
         } catch(err) {
             console.log(err);
-            res.status(400).send("Error Creating Closet Item")
+            res.status(400).send("Error Updating Item")
         }
     }
 
     public async delete(req, res) {
         try{
-            const closetItem: IClosetItem = await ClosetItem.findOne({id: req.params.id});
+            const item: IItem = await Item.findOne({id: req.params.id});
 
-            if (!closetItem) {
+            if (!item) {
                 res.status(400).send({
                     code: 404,
-                    message: 'Closet Item not found',
+                    message: 'Item not found',
                 });
             }
             
             const params = {
                 Bucket: "acts2",
                 Delete: {
-                    Objects: closetItem.images.map(image => {
+                    Objects: item.images.map(image => {
                         return {Key: image.key}
                     }), 
                     Quiet: false
@@ -133,15 +132,15 @@ export class ClosetItemController extends Controller {
             s3.deleteObjects(params, async(err) => {
                 if (err) {
                     console.log(err);
-                    res.status(400).send("Error Deleting Closet Item");
+                    res.status(400).send("Error Deleting Item");
                 } else {
-                    await ClosetItem.findOneAndRemove({id: req.params.id});
+                    await Item.findOneAndRemove({id: req.params.id});
                     res.send({deletedId: req.params.id});
                 }
             });
         } catch(err) {
             console.log(err);
-            res.status(400).send("Error Deleting Closet Item");
+            res.status(400).send("Error Deleting Item");
         }
     }
 

@@ -1,6 +1,6 @@
 import { IImage } from ".";
 
-export interface IClosetItem {
+export interface IItem {
     id: string,
     userId: string,
     username: string,
