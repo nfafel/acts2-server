@@ -37,8 +37,15 @@ export class UserController extends Controller {
     public async getUser(req, res) {
         try {
             const user: IUser = await User.findOne({id: req.params.id});
-            res.status(200).send(user);
 
+            if (!user) {
+                res.status(404).send({
+                    code: 404,
+                    message: 'User not found',
+                })
+            }
+
+            res.status(200).send(user);
         } catch(err) {
             console.log(err)
             res.status(400).send({message: "Error getting user"})
@@ -49,6 +56,14 @@ export class UserController extends Controller {
         try {
             const userUpdates = req.body.updates;
             const updatedUser: IUser = await User.findOneAndUpdate({id: req.params.id}, userUpdates, {runValidators: true, new: true });
+
+            if (!updatedUser) {
+                res.status(404).send({
+                    code: 404,
+                    message: 'User not found',
+                })
+            }
+
             res.status(200).send(updatedUser);
         } catch(err) {
             console.log(err)
@@ -58,9 +73,17 @@ export class UserController extends Controller {
 
     public async delete(req, res) { //Verify JWT for this route
         try {
-            await User.findOneAndRemove({id: req.params.id});
+            const deletedUser = await User.findOneAndRemove({id: req.params.id});
+
+            if (!deletedUser) {
+                res.status(404).send({
+                    code: 404,
+                    message: 'User not found',
+                })
+            }
+
             //Delete their items and posts here
-            res.status(200).send(req.params)
+            res.status(200).send(deletedUser.id);
         } catch(err) {
             console.log(err)
             res.status(400).send({message: "Error deleting user"})
@@ -68,8 +91,8 @@ export class UserController extends Controller {
     }
 
     protected initializeRoutes(): void {
-        this.router.get('/:username/availability', this.checkUsernameAvailability);
         this.router.get('/:id', this.getUser);
+        this.router.get('/:username/availability', this.checkUsernameAvailability);
 
         this.router.post('/', this.createUser);
 

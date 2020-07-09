@@ -26,6 +26,14 @@ export class ChatController extends Controller {
     public async delete(req, res) {
         const chatId = req.params.id;
         const deletedChat = await Chat.findOneAndRemove({id: chatId});
+
+        if (!deletedChat) {
+            res.status(404).send({
+                code: 404,
+                message: 'Chat not found',
+            });
+        }
+
         await Message.deleteMany({chatId: chatId})
         res.status(200).send(deletedChat.id);
     }

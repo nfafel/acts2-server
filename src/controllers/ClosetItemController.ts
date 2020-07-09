@@ -93,8 +93,16 @@ export class ClosetItemController extends Controller {
     public async update(req, res) {
         try{
             const updates: IClosetItem = req.body.updates;
-            const result: IClosetItem = await ClosetItem.findOneAndUpdate({id: req.body.closetItemId}, updates, {runValidators: true, new: true });
-            res.send({updatedItem: result});
+            const updatedClosetItem: IClosetItem = await ClosetItem.findOneAndUpdate({id: req.body.closetItemId}, updates, {runValidators: true, new: true });
+
+            if (!updatedClosetItem) {
+                res.status(400).send({
+                    code: 404,
+                    message: 'Closet Item not found',
+                });
+            }
+
+            res.send(updatedClosetItem);
         } catch(err) {
             console.log(err);
             res.status(400).send("Error Creating Closet Item")
@@ -104,6 +112,14 @@ export class ClosetItemController extends Controller {
     public async delete(req, res) {
         try{
             const closetItem: IClosetItem = await ClosetItem.findOne({id: req.params.id});
+
+            if (!closetItem) {
+                res.status(400).send({
+                    code: 404,
+                    message: 'Closet Item not found',
+                });
+            }
+            
             const params = {
                 Bucket: "acts2",
                 Delete: {

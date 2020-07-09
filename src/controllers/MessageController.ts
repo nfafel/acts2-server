@@ -25,12 +25,28 @@ export class MessageController extends Controller {
         const messageId = req.params.id;
         const newText = req.body.text;
         const updatedMessage = await Message.findOneAndUpdate({id: messageId}, {text: newText}, {runValidators: true, new: true });
+
+        if (!updatedMessage) {
+            res.status(400).send({
+                code: 404,
+                message: 'Message not found',
+            });
+        }
+
         res.status(200).send(updatedMessage);
     }
 
     public async delete(req, res) {
         const messageId = req.params.id;
         const deletedMessage = await Message.findOneAndRemove({id: messageId});
+
+        if (!deletedMessage) {
+            res.status(400).send({
+                code: 404,
+                message: 'Message not found',
+            });
+        }
+
         res.status(200).send(deletedMessage.id);
     }
 
