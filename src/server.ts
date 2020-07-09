@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import http, { Server } from 'http';
 import config from '../config';
 import {
-    ClosetItemController,
+    ItemController,
     RootController,
     UniversityController,
     UserController,
@@ -60,7 +60,7 @@ export default class App {
         this.express.use('/authorization', new AuthorizationController().router);
         this.express.use('/user', new UserController().router);
         this.express.use('/university', new UniversityController().router);
-        this.express.use('/closet-item', new ClosetItemController().router);
+        this.express.use('/item', new ItemController().router);
         this.express.use('/chat', new ChatController().router);
         this.express.use('/message', new MessageController().router);
 

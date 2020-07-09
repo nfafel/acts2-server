@@ -1,4 +1,4 @@
-import { ClosetItemController } from './ClosetItemController';
+import { ItemController } from './ItemController';
 import { RootController } from './RootController';
 import { UniversityController } from './UniversityController';
 import { UserController } from './UserController';
@@ -8,7 +8,7 @@ import { AuthorizationController } from './AuthorizationController';
 
 
 export {
-    ClosetItemController,
+    ItemController,
     RootController,
     UniversityController,
     UserController,
