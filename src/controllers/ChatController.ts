@@ -18,9 +18,12 @@ export class ChatController extends Controller {
         const chatData: INewChatData = {
             firstUserId: req.body.firstUserId,
             secondUserId: req.body.secondUserId,
+            exchangeId: req.body.exchangeId,
             startedAt: new Date(),
         };
         const newChat = await new Chat(chatData).save();
+
+        res.status(201).send(newChat);
     }
 
     public async delete(req, res) {

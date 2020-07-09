@@ -6,6 +6,7 @@ import { IMessage } from './IMessage';
 import { IChat } from './IChat';
 import { INewMessageData } from './INewMessageData';
 import { IExchange } from './IExchange';
+import { INewExchangeData } from './INewExchangeData';
 
 export {
     IItem,
@@ -16,4 +17,5 @@ export {
     IChat,
     INewMessageData,
     IExchange,
+    INewExchangeData,
 }

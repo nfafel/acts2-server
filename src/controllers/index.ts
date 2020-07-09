@@ -5,7 +5,7 @@ import { UserController } from './UserController';
 import { MessageController } from './MessageController';
 import { ChatController } from './ChatController';
 import { AuthorizationController } from './AuthorizationController';
-
+import { ExchangeController } from './ExchangeController';
 
 export {
     ItemController,
@@ -15,4 +15,5 @@ export {
     MessageController,
     ChatController,
     AuthorizationController,
+    ExchangeController,
 }

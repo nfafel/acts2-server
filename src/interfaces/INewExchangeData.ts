@@ -1,5 +1,4 @@
-export interface IExchange {
-    id: string;
+export interface INewExchangeData {
     ownerUserId: string;
     requesterUserId: string;
     itemId: string;

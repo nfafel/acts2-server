@@ -12,6 +12,7 @@ import {
     ChatController,
     MessageController,
     AuthorizationController,
+    ExchangeController,
 } from './controllers';
 
 import {
@@ -63,6 +64,7 @@ export default class App {
         this.express.use('/item', new ItemController().router);
         this.express.use('/chat', new ChatController().router);
         this.express.use('/message', new MessageController().router);
+        this.express.use('/exchange', new ExchangeController().router);
 
         this.express.use(notFound);
         this.express.use(validationErrorHandler);

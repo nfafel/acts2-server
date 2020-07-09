@@ -19,17 +19,25 @@ let ExchangeSchema = new Schema({
         unique: true,
         default: getDefaultId
     },
-    firstUserId: {
+    ownerUserId: {
         type: String,
         required: true,
     },
-    secondUserId: {
+    requesterUserId: {
         type: String,
         required: true,
     },
-    startedAt: {
-        type: Date,
+    itemId: {
+        type: String,
         required: true,
+    },
+    offeredItemId: {
+        type: String,
+        required: false,
+    },
+    offeredDollars: {
+        type: Number,
+        required: false,
     }
 });
 

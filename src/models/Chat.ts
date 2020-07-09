@@ -27,6 +27,10 @@ let ChatSchema = new Schema({
         type: String,
         required: true,
     },
+    exchangeId: {
+        type: String,
+        required: true,
+    },
     startedAt: {
         type: Date,
         required: true,
