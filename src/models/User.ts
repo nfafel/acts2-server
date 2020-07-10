@@ -32,6 +32,10 @@ let UserSchema = new Schema({
         type: String,
         required: true
     },
+    universityName: {
+        type: String,
+        required: true
+    },
     profilePicture: {
         type: Buffer, 
         required: false
