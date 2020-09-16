@@ -16,7 +16,13 @@ export class UserController extends Controller {
             res.status(201).send(newUser);
         } catch(err) {
             console.log(err);
-            res.status(400).send({message: "Error creating user"});
+            res.status(400).send({
+                code: 400,
+                message: "Error creating user",
+                body: {
+                    message: err.message,
+                }
+            });
         }
     }
 
@@ -61,7 +67,7 @@ export class UserController extends Controller {
                 res.status(404).send({
                     code: 404,
                     message: 'User not found',
-                })
+                });
             }
 
             res.status(200).send(updatedUser);

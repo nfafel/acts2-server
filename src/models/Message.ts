@@ -24,11 +24,6 @@ let MessageSchema = new Schema({
         required: true,
         unique: true
     },
-    username: {
-        type: String, 
-        required: true,
-        unique: true
-    },
     text: {
         type: String,
         required: true,

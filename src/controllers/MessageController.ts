@@ -3,20 +3,39 @@ import { Message } from '../models/Message';
 import { INewMessageData } from '../interfaces';
 
 export class MessageController extends Controller {
-    public async getAllByChat(req, res) {
-        const chatId = req.params.chat_id;
+    public async getMany(req, res) {
+        const chatId = req.query.chatId;
+
+        if (!chatId) {
+            res.status(400).send({
+                code: 400,
+                message: '`Chat Id` is a required field',
+            });
+            return;
+        }
+
         const messages = await Message.find({chatId: chatId});
-        
         res.status(200).send(messages);
     }
 
     public async post(req, res) {
+        const {chatId, userId, text} = req.body;
+
+        if (!chatId || !userId || !text) {
+            res.status(400).send({
+                code: 400,
+                message: '`Chat Id`, `User Id`, and `text` are required fields.'
+            });
+            return;
+        }
+
         const messageData: INewMessageData = {
-            chatId: req.body.chatId,
-            userId: req.body.userId,
-            text: req.body.text,
+            chatId,
+            userId,
+            text,
             sentAt: new Date(),
         };
+
         const newMessage = await new Message(messageData).save();
         res.status(201).send(newMessage);
     }
@@ -51,7 +70,7 @@ export class MessageController extends Controller {
     }
 
     protected initializeRoutes(): void {
-        this.router.get('/:chat_id', this.getAllByChat);
+        this.router.get('/', this.getMany);
 
         this.router.post('/', this.post);
 

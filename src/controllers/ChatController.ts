@@ -4,7 +4,16 @@ import { INewChatData } from '../interfaces/INewChatData';
 
 export class ChatController extends Controller {
     public async getByUser(req, res) {
-        const userId = req.params.user_id;
+        const userId = req.query.userId;
+
+        if (!userId) {
+            res.status(400).send({
+                code: 400,
+                message: '`User Id` is required',
+            });
+            return;
+        }
+
         const chats = await Chat.find({
             $or: [
                 { firstUserId: userId },
@@ -42,7 +51,7 @@ export class ChatController extends Controller {
     }
 
     protected initializeRoutes(): void {
-        this.router.get('/:user_id', this.getByUser);
+        this.router.get('/user', this.getByUser);
 
         this.router.post('/', this.post);
 

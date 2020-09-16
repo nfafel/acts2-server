@@ -3,7 +3,6 @@ export interface IUser {
     username: string;
     password: string;
     universityId: string;
-    universityName: string;
     profilePicture: Buffer;
     profilePictureContentType: string;
     secret: string;
