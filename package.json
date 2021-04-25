@@ -4,17 +4,21 @@
   "description": "server for acts2 app",
   "main": "server.js",
   "scripts": {
-    "test": "npm test",
-    "start": "node built/server.js"
+    "build": "tsc",
+    "clean": "rm -Rf ./built",
+    "start": "npm run clean && npm run build && node built/src/server.js",
+    "test": "npm test"
   },
   "author": "Nicholas Fafel",
   "license": "ISC",
   "dependencies": {
+    "@types/mongoose": "^5.7.29",
     "@types/multer-s3": "^2.7.7",
     "@types/node": "^13.7.1",
     "aws-sdk": "^2.624.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "cuid": "^2.1.8",
     "express": "^4.17.1",
     "http": "0.0.0",
     "jsonwebtoken": "^8.5.1",
@@ -23,5 +27,10 @@
     "multer-s3": "^2.9.0",
     "path": "^0.12.7",
     "random-words": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.2",
+    "@types/node": "^13.7.4",
+    "typescript": "^3.8.2"
   }
 }
