@@ -25,5 +25,5 @@ let UniversitySchema = new Schema({
     }
 });
 
-// Export the model
+// Export the model 
 export const University = mongoose.model<IUniversityDocument>('University', UniversitySchema);
