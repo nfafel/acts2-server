@@ -5,6 +5,32 @@ import Controller from '../lib/Controller';
 import { IImage, IItem } from '../interfaces';
 
 export class ItemController extends Controller {
+    public async getMany(req, res) {
+        try{
+            const userId = req.query.userId;
+
+            if (!userId) {
+                res.status(400).send({
+                    code: 400,
+                    message: '`User Id` is a required field',
+                });
+                return;
+            }
+
+            const excludeUserItems = req.query.excludeUserItems;
+            if (excludeUserItems === 'true') {
+                req.query.userId = {$ne: userId}
+            };
+            delete req.query.excludeUserItems;
+
+            const items = await Item.find(req.query);
+            res.status(200).send(items);
+        } catch(err) {
+            console.log(err);
+            res.status(400).send("Error getting Items")
+        }
+    }
+
     public async getOne(req, res) {
         try{
             const item = await Item.findOne({id: req.params.id});
@@ -18,26 +44,6 @@ export class ItemController extends Controller {
         } catch(err) {
             console.log(err);
             res.status(400).send("Error getting Item")
-        }
-    }
-
-    public async getByUser(req, res) {
-        try{
-            const items: IItem[] = await Item.find({userId: req.params.user_id});
-            res.status(200).send(items);
-        } catch(err) {
-            console.log(err);
-            res.status(400).send("Error getting Items by User")
-        }
-    }
-
-    public async getByUniversity(req, res) {
-        try{
-            const items: IItem[] = await Item.find({ universityId: req.params.university_id });
-            res.status(200).send(items);
-        } catch(err) {
-            console.log(err);
-            res.status(400).send("Error getting Items by University")
         }
     }
 
@@ -60,7 +66,7 @@ export class ItemController extends Controller {
                         // If Success
                         const images: IImage[] = req.files.map(file => ({
                             key: file.key,
-                            url: file.location
+                            url: file.location,
                         }));
                         // Save the file names into database into Items model
                         const newItemValues: IItem = {
@@ -145,9 +151,8 @@ export class ItemController extends Controller {
     }
 
     protected initializeRoutes(): void {
+        this.router.get('/', this.getMany);
         this.router.get('/:id', this.getOne);
-        this.router.get('/:user_id/user', this.getByUser);
-        this.router.get('/:university_id/university', this.getByUniversity);
 
         this.router.post('/', this.create);
 

@@ -38,13 +38,13 @@ let ItemSchema = new Schema({
                     required: true,
                     type: String,
                 },
-                url: {
+                uri: {
                     required: true,
                     type: String,
                 }
             }
         ], 
-        required: true
+        required: true,
     },
     gender: {
         type: String, 

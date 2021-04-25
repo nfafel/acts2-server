@@ -22,16 +22,19 @@ let MessageSchema = new Schema({
     userId: {
         type: String, 
         required: true,
-        unique: true
     },
     text: {
+        type: String,
+        required: true,
+    },
+    chatId: {
         type: String,
         required: true,
     },
     sentAt: {
         type: Date,
         required: true,
-    }
+    },
 });
 
 // Export the model
